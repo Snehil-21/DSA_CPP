@@ -10,7 +10,13 @@ void getBit(int num, int i)
 void setBit(int num, int i)
 {
     num = num | (1 << i);
-    cout << "Updated number is " << num << endl;
+    cout << "Updated number after setting bit is " << num << endl;
+}
+
+void clearBit(int num, int i)
+{
+    num = num & (~(1 << i));
+    cout << "Updated number after clearing bit is: " << num << endl;
 }
 
 int main()
@@ -22,4 +28,5 @@ int main()
     cin >> i;
     getBit(num, i);
     setBit(num, i);
+    clearBit(num, i);
 }
