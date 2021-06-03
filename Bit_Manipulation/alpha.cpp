@@ -19,6 +19,21 @@ void clearBit(int num, int i)
     cout << "Updated number after clearing bit is: " << num << endl;
 }
 
+void toggleBit(int num, int i)
+{
+    num = num ^ (1 << i);
+    cout << "Number after toggling bit is: " << num << endl;
+}
+
+void upperCase()
+{
+    char ch;
+    cout << "Enter character to convert: ";
+    cin >> ch;
+    ch = ch | (1 << 5);
+    cout << "Character after conversion: " << ch << endl;
+}
+
 int main()
 {
     int num, i;
@@ -29,4 +44,6 @@ int main()
     getBit(num, i);
     setBit(num, i);
     clearBit(num, i);
+    toggleBit(num, i);
+    upperCase();
 }
