@@ -1,150 +1,131 @@
 #include <iostream>
 using namespace std;
 
-class Node
+struct Node
 {
-public:
     int data;
-    Node *left;
     Node *right;
+    Node *left;
 
     Node(int val)
     {
         data = val;
-        left = right = NULL;
+        left = NULL;
+        right = NULL;
     }
 };
 
-class BST
+Node *insert(Node *root, int val)
 {
-public:
-    // INSERT NODE IN THE TREE
-
-    Node *insert(int val, Node *root)
+    if (root == NULL)
     {
-        if (!root)
-        {
-            return root = new Node(val);
-        }
+        return new Node(val);
+    }
 
-        if (root->data > val)
+    if (val < root->data)
+    {
+        root->left = insert(root->left, val);
+    }
+
+    else
+    {
+        root->right = insert(root->right, val);
+    }
+
+    return root;
+}
+
+bool search(Node *root, int val)
+{
+    if (!root)
+    {
+        return false;
+    }
+
+    if (root->data == val)
+        return true;
+
+    if (root->data > val)
+        return search(root->left, val);
+
+    return search(root->right, val);
+}
+
+Node *findInorderSuccessor(Node *root)
+{
+    while (root->left)
+    {
+        root = root->left;
+    }
+    return root;
+}
+
+Node *remove(Node *root, int key)
+{
+    if (root->data > key)
+    {
+        root->left = remove(root->left, key);
+    }
+    else if (root->data < key)
+    {
+        root->right = remove(root->right, key);
+    }
+    else
+    {
+        if (root->left == NULL)
         {
-            root->left = insert(val, root->left);
+            Node *temp = root->right;
+            free(root);
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            Node *temp = root->left;
+            free(root);
+            return temp;
         }
         else
         {
-            root->right = insert(val, root->right);
+            Node *temp = findInorderSuccessor(root->right);
+            root->data = temp->data;
+            root->right = remove(root->right, temp->data);
         }
-        return root;
     }
+    return root;
+}
 
-    // SEARCH FOR A NODE IN THE TREE
-
-    void search(int val, Node *root)
+void inorder(Node *root)
+{
+    if (root == NULL)
     {
-        while (root)
-        {
-            if (root->data == val)
-            {
-                cout << val << " found in the tree!" << endl;
-                return;
-            }
-            else if (root->data > val)
-            {
-                root = root->left;
-            }
-            else if (root->data < val)
-            {
-                root = root->right;
-            }
-        }
-        cout << val << " not found in the tree.";
+        return;
     }
 
-    // FIND SUCCESSOR OF NODE IN TREE
-    Node *minSuccessor(Node *root)
-    {
-        while (root && root->left)
-        {
-            root = root->left;
-        }
-        return root;
-    }
-
-    // DELETE A NODE
-    Node *deleteNode(int val, Node *root)
-    {
-        if (!root)
-        {
-            return NULL;
-        }
-        if (root->data == val)
-        {
-            if (!root->left && !root->right)
-            {
-                delete (root);
-                return NULL;
-            }
-            else if (root->left && !root->right)
-            {
-                root->data = root->left->data;
-                root->left = NULL;
-                delete (root->left);
-                return root;
-            }
-            else if (!root->left && root->right)
-            {
-                root->data = root->right->data;
-                root->right = NULL;
-                delete (root->right);
-                return root;
-            }
-            else
-            {
-                Node *x = minSuccessor(root->right);
-                root->data = x->data;
-                root->right = deleteNode(x->data, root->right);
-            }
-        }
-        else if (root->data > val)
-        {
-            root->left = deleteNode(val, root->left);
-        }
-        else if (root->data < val)
-        {
-            root->right = deleteNode(val, root->right);
-        }
-        return root;
-    }
-
-    // TRAVERSE THE TREE IN INORDER
-
-    void inorder(Node *root)
-    {
-        if (!root)
-            return;
-        inorder(root->left);
-        cout << root->data << " ";
-        inorder(root->right);
-    }
-};
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
 
 int main()
 {
-    BST b;
+
+    int a[] = {5, 2, 1, 3, 4, 6};
+    int len = sizeof(a) / sizeof(a[0]);
+
     Node *root = NULL;
-    root = b.insert(10, root);
-    b.insert(5, root);
-    b.insert(15, root);
-    b.insert(4, root);
-    b.insert(6, root);
-    b.insert(14, root);
-    b.insert(16, root);
-    b.inorder(root);
-    cout << endl;
-    b.deleteNode(15, root);
-    cout << endl;
-    b.inorder(root);
-    // b.search(4, root);
+    root = insert(root, a[0]);
+
+    for (int i = 1; i < len; i++)
+    {
+        insert(root, a[i]);
+    }
+
+    // inorder(root);
+    // cout << endl;
+    // cout << search(root, 7);
+    // cout << endl;
+    // remove(root, 3);
+    inorder(root);
+
     return 0;
 }
