@@ -6,108 +6,123 @@ class Node
 public:
     int data;
     Node *next;
-    Node(int n)
+
+    Node(int val)
     {
-        data = n;
+        data = val;
         next = NULL;
     }
 };
 
-class LinkedList
+Node *insertLast(Node *head, int val)
 {
-    Node *head = NULL;
+    Node *temp = head;
 
-public:
-    void insert(int x)
+    if (!temp)
     {
-        Node *ptr = new Node(x);
-        Node *temp = head;
-        if (!head)
-        {
-            head = ptr;
-            return;
-        }
-        while (temp->next)
-        {
-            temp = temp->next;
-        }
-        temp->next = ptr;
+        head = new Node(val);
+        return head;
+    }
+    while (temp->next)
+    {
+        temp = temp->next;
+    }
+    temp->next = new Node(val);
+    return head;
+}
+
+Node *insertStart(Node *head, int val)
+{
+    if (!head)
+    {
+        head = new Node(val);
+        return head;
     }
 
-    void remove(int x)
+    Node *temp = head;
+    Node *ptr = new Node(val);
+    ptr->next = temp;
+    head = ptr;
+    return head;
+}
+
+void search(Node *head, int val)
+{
+    Node *temp = head;
+    int count = 0;
+    bool flag = false;
+
+    while (temp)
     {
-        Node *temp = head;
+        count++;
+        if (temp->data == val)
+        {
+            flag = true;
+            break;
+        }
+        temp = temp->next;
+    }
+    if (!flag)
+    {
+        cout << val << " not found in LinkedList.\n";
+    }
+    else
+    {
+        cout << val << " found at position " << count << " in LinkedList!\n";
+    }
+}
+
+Node *deleteNode(Node *head, int val)
+{
+    if (head->data == val)
+    {
         Node *ptr = head;
-        if (!head)
-        {
-            return;
-        }
-        if (head->data == x)
-        {
+        if (head->next)
             head = head->next;
-        }
-        while (temp->next && temp->data != x)
-        {
-            ptr = temp;
-            temp = temp->next;
-        }
-        if (temp->data == x && temp->next == NULL)
-        {
-            ptr->next = NULL;
-            return;
-        }
-        else if (temp->data == x)
-        {
-            ptr->next = temp->next;
-            delete (temp);
-            return;
-        }
-        if (temp)
-        {
-            delete (ptr->next);
-            ptr->next = temp;
-        }
+        else
+            head = NULL;
+        return head;
     }
 
-    void search(int x)
+    Node *temp = head;
+    while (temp->next->data != val && temp)
     {
-        Node *temp = head;
-        int pos = 0;
-
-        while (temp)
-        {
-            if (temp->data == x)
-            {
-                cout << "Element found in linked list at: " << pos << endl;
-                break;
-            }
-            temp = temp->next;
-            pos++;
-        }
-        if (!temp)
-            cout << "Element not found in linked list!\n";
+        temp = temp->next;
     }
-
-    void showList()
+    if (temp)
     {
-        Node *temp = head;
-        while (temp->next)
-        {
-            cout << temp->data << " -> ";
-            temp = temp->next;
-        }
-        cout << temp->data << " -> NULL" << endl;
+        Node *ptr = temp->next;
+        temp->next = temp->next->next;
+        delete ptr;
     }
-};
+    return head;
+}
+
+void display(Node *head)
+{
+    Node *temp = head;
+    while (temp)
+    {
+        cout << temp->data << "->";
+        temp = temp->next;
+    }
+    cout << "NULL\n";
+}
 
 int main()
 {
-    LinkedList l;
-    l.insert(2);
-    l.insert(3);
-    l.insert(4);
-    // l.remove(6);
-    l.search(4);
-    l.showList();
+
+    Node *head = NULL;
+
+    head = insertLast(head, 1);
+    head = insertLast(head, 2);
+    head = insertLast(head, 3);
+    display(head);
+    search(head, 2);
+    head = insertStart(head, 0);
+    display(head);
+    search(head, 0);
+    head = deleteNode(head, 2);
+    display(head);
     return 0;
 }
