@@ -6,25 +6,13 @@ void insertEdge(int u, int v, vector<int> adj[]) {
     adj[v].push_back(u);
 }
 
-void bfs(int v, vector<int> adj[]) {
-    int visited[v] = {0};
-    queue<int> q;
-    for(int i = 0; i < v; i++) {
-        if(visited[i] == 0) {
-            q.push(i);
-            visited[i] = 1;
+void dfs(int i, vector<int> adj[], vector<int>& visited) {
+    cout<<i<<" ";
+    visited[i] = 1;
 
-            while(!q.empty()) {
-                int curr = q.front();
-                q.pop();
-                cout<<curr<<" ";
-                for(auto j : adj[curr]) {
-                    if(visited[j] == 0) {
-                        q.push(j);
-                        visited[j] = 1;
-                    }
-                }
-            }
+    for(auto it : adj[i]) {
+        if(visited[it] == 0) {
+            dfs(it, adj, visited);
         }
     }
 }
@@ -58,7 +46,9 @@ int main() {
     }
 
     // printGraph(adj, v);
-    bfs(v, adj);
-
+    vector<int> visited(v+1, 0);
+    for(int i = 0; i < v; i ++)
+        if(visited[i] == 0)
+            dfs(i, adj, visited);
     return 0;
 }
